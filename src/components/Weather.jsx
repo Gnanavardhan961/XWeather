@@ -1,7 +1,7 @@
 // src/components/Weather.jsx
 import React, { useState } from "react";
 
-const API_KEY = "YOUR_API_KEY"; // Replace with your WeatherAPI key
+const API_KEY = "YOUR_API_KEY";
 
 const Weather = () => {
   const [city, setCity] = useState("");
@@ -13,15 +13,13 @@ const Weather = () => {
     if (!city.trim()) return;
 
     setLoading(true);
-    setWeatherData({}); // force render so .weather-cards exists for Cypress
+    setWeatherData(null);
 
     try {
       const res = await fetch(
         `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}`
       );
-
       if (!res.ok) throw new Error("Network response was not ok");
-
       const data = await res.json();
       setWeatherData(data);
     } catch (err) {
@@ -52,23 +50,25 @@ const Weather = () => {
       {loading && <p>Loading data...</p>}
 
       <div className="weather-cards" style={{ minHeight: "150px" }}>
-        {weatherData && weatherData.current ? (
-          <div className="weather-card">
-            <h3>{weatherData.location.name}</h3>
-            <p>Temperature: {weatherData.current.temp_c}°C</p>
-            <p>Humidity: {weatherData.current.humidity}%</p>
-            <p>Condition: {weatherData.current.condition.text}</p>
-            <p>Wind Speed: {weatherData.current.wind_kph} kph</p>
-          </div>
-        ) : (
-          !loading && (
-            <div
-              className="weather-card"
-              style={{ visibility: "hidden" }}
-            >
-              Placeholder
+        {weatherData && weatherData.current && (
+          <>
+            <div className="weather-card">
+              <h3>Temperature</h3>
+              <p>{weatherData.current.temp_c}°C</p>
             </div>
-          )
+            <div className="weather-card">
+              <h3>Humidity</h3>
+              <p>{weatherData.current.humidity}%</p>
+            </div>
+            <div className="weather-card">
+              <h3>Condition</h3>
+              <p>{weatherData.current.condition.text}</p>
+            </div>
+            <div className="weather-card">
+              <h3>Wind Speed</h3>
+              <p>{weatherData.current.wind_kph} kph</p>
+            </div>
+          </>
         )}
       </div>
     </div>
