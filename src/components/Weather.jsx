@@ -13,7 +13,6 @@ const Weather = () => {
     if (!city.trim()) return;
 
     setLoading(true);
-    setWeatherData(null);
 
     try {
       const res = await fetch(
@@ -29,6 +28,31 @@ const Weather = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const renderCards = () => {
+    if (!weatherData || !weatherData.current) return null;
+    const { temp_c, humidity, condition, wind_kph } = weatherData.current;
+    return (
+      <>
+        <div className="weather-card">
+          <h3>Temperature</h3>
+          <p>{temp_c}°C</p>
+        </div>
+        <div className="weather-card">
+          <h3>Humidity</h3>
+          <p>{humidity}%</p>
+        </div>
+        <div className="weather-card">
+          <h3>Condition</h3>
+          <p>{condition.text}</p>
+        </div>
+        <div className="weather-card">
+          <h3>Wind Speed</h3>
+          <p>{wind_kph} kph</p>
+        </div>
+      </>
+    );
   };
 
   return (
@@ -50,26 +74,7 @@ const Weather = () => {
       {loading && <p>Loading data...</p>}
 
       <div className="weather-cards" style={{ minHeight: "150px" }}>
-        {weatherData && weatherData.current && (
-          <>
-            <div className="weather-card">
-              <h3>Temperature</h3>
-              <p>{weatherData.current.temp_c}°C</p>
-            </div>
-            <div className="weather-card">
-              <h3>Humidity</h3>
-              <p>{weatherData.current.humidity}%</p>
-            </div>
-            <div className="weather-card">
-              <h3>Condition</h3>
-              <p>{weatherData.current.condition.text}</p>
-            </div>
-            <div className="weather-card">
-              <h3>Wind Speed</h3>
-              <p>{weatherData.current.wind_kph} kph</p>
-            </div>
-          </>
-        )}
+        {renderCards()}
       </div>
     </div>
   );
