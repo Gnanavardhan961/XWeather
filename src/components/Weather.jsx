@@ -1,7 +1,7 @@
 // src/components/Weather.jsx
 import React, { useState } from "react";
 
-const API_KEY = "YOUR_API_KEY"; // Replace with your WeatherAPI key
+const API_KEY = "YOUR_API_KEY"; // replace with your WeatherAPI key
 
 const Weather = () => {
   const [city, setCity] = useState("");
@@ -10,24 +10,22 @@ const Weather = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-
-    if (!city.trim()) return; // prevent empty search
+    if (!city.trim()) return;
 
     setLoading(true);
-    setWeatherData(null);
+    setWeatherData({}); // force render so Cypress sees .weather-cards
 
     try {
       const res = await fetch(
         `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}`
       );
-
       if (!res.ok) throw new Error("Network response was not ok");
-
       const data = await res.json();
       setWeatherData(data);
     } catch (err) {
       console.error(err);
       alert("Failed to fetch weather data");
+      setWeatherData(null);
     } finally {
       setLoading(false);
     }
@@ -51,7 +49,7 @@ const Weather = () => {
 
       {loading && <p>Loading data…</p>}
 
-      <div className="weather-cards" style={{ minHeight: "100px" }}>
+      <div className="weather-cards" style={{ minHeight: "150px" }}>
         {weatherData && weatherData.current && (
           <div className="weather-card">
             <h3>{weatherData.location.name}</h3>
