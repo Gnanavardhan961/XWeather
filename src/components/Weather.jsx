@@ -1,7 +1,8 @@
 // src/components/Weather.jsx
 import React, { useState } from "react";
 
-const API_KEY = "YOUR_API_KEY"; 
+const API_KEY = "YOUR_API_KEY"; // Replace with your WeatherAPI key
+
 const Weather = () => {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
@@ -10,7 +11,7 @@ const Weather = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
 
-    if (!city) return;
+    if (!city.trim()) return; // prevent empty search
 
     setLoading(true);
     setWeatherData(null);
@@ -48,12 +49,10 @@ const Weather = () => {
         <button type="submit">Search</button>
       </form>
 
-      {/* Loading message */}
-      <p>{loading ? "Loading data…" : ""}</p>
+      {loading && <p>Loading data…</p>}
 
-      {/* Weather cards container */}
-      <div className="weather-cards">
-        {weatherData && (
+      <div className="weather-cards" style={{ minHeight: "100px" }}>
+        {weatherData && weatherData.current && (
           <div className="weather-card">
             <h3>{weatherData.location.name}</h3>
             <p>Temperature: {weatherData.current.temp_c}°C</p>
