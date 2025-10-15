@@ -30,30 +30,12 @@ const Weather = () => {
     }
   };
 
-  const renderCards = () => {
-    if (!weatherData || !weatherData.current) return null;
-    const { temp_c, humidity, condition, wind_kph } = weatherData.current;
-    return (
-      <>
-        <div className="weather-card">
-          <h3>Temperature</h3>
-          <p>{temp_c}°C</p>
-        </div>
-        <div className="weather-card">
-          <h3>Humidity</h3>
-          <p>{humidity}%</p>
-        </div>
-        <div className="weather-card">
-          <h3>Condition</h3>
-          <p>{condition.text}</p>
-        </div>
-        <div className="weather-card">
-          <h3>Wind Speed</h3>
-          <p>{wind_kph} kph</p>
-        </div>
-      </>
-    );
-  };
+  const renderCard = (title, value) => (
+    <div className="weather-card">
+      <h3>{title}</h3>
+      <p>{value || "---"}</p>
+    </div>
+  );
 
   return (
     <div style={{ padding: "20px" }}>
@@ -74,7 +56,10 @@ const Weather = () => {
       {loading && <p>Loading data...</p>}
 
       <div className="weather-cards" style={{ minHeight: "150px" }}>
-        {renderCards()}
+        {renderCard("Temperature", weatherData?.current?.temp_c + "°C")}
+        {renderCard("Humidity", weatherData?.current?.humidity + "%")}
+        {renderCard("Condition", weatherData?.current?.condition?.text)}
+        {renderCard("Wind Speed", weatherData?.current?.wind_kph + " kph")}
       </div>
     </div>
   );
