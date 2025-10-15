@@ -1,14 +1,17 @@
+// src/components/Weather.jsx
 import React, { useState } from "react";
+
+const API_KEY = "YOUR_API_KEY"; // <-- Replace with your WeatherAPI key
 
 const Weather = () => {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const API_KEY = "YOUR_API_KEY_HERE"; // replace with your key
+  const handleSearch = async (e) => {
+    e.preventDefault();
 
-  const handleSearch = async () => {
-    if (!city) return;
+    if (!city) return; // prevent empty search
 
     setLoading(true);
     setWeatherData(null);
@@ -18,7 +21,7 @@ const Weather = () => {
         `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}`
       );
 
-      if (!res.ok) throw new Error("Network response not ok");
+      if (!res.ok) throw new Error("Network response was not ok");
 
       const data = await res.json();
       setWeatherData(data);
@@ -33,13 +36,18 @@ const Weather = () => {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Weather App</h1>
-      <input
-        type="text"
-        value={city}
-        placeholder="Enter city name"
-        onChange={(e) => setCity(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
+
+      <form onSubmit={handleSearch}>
+        <label htmlFor="city">City: </label>
+        <input
+          id="city"
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="Enter city name"
+        />
+        <button type="submit">Search</button>
+      </form>
 
       {loading && <p>Loading data…</p>}
 
